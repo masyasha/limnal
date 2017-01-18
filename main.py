@@ -1,46 +1,40 @@
 import sys, pygame
-pygame.init()
+import player
 
 size = width, height = 400, 700
 speed = 10
-black = 255, 255, 255
+color = "#ff7f7f"
 
-screen = pygame.display.set_mode(size)
-clock = pygame.time.Clock()
-ball = pygame.image.load("tot2.png")
-ball = pygame.transform.scale(ball, (40, 40))
-ballrect = ball.get_rect()
-ballrect.x = int(width/2)
 
-face_direction = 'right'
+def main():
 
-def dispatch_press(e, false=None):
-    if e.key == pygame.K_LEFT and false != 'l':
-        return (-speed, 1)
-    if e.key == pygame.K_RIGHT and false != 'r':
-        return (speed, 1)
-    return (0, 1)
+    pygame.init()
 
-while 1:
-    move = (0,1)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if ballrect.left < 0:
-                move = dispatch_press(event, 'l')
-            elif ballrect.right > width:
-                move = dispatch_press(event, 'r')
-            else:
-                move = dispatch_press(event)
-    if move[0] > 0 and face_direction != 'right':
-        ball = pygame.transform.flip(ball, True, False)
-        face_direction = 'right'
-    if move[0] < 0 and face_direction != 'left':
-        ball = pygame.transform.flip(ball, True, False)
-        face_direction = 'left'
+    screen = pygame.display.set_mode(size)
+    bg = pygame.Surface(size)
+    bg.fill(pygame.Color(color))
+    clock = pygame.time.Clock()
+    skier = player.Player()
+    objects = pygame.sprite.Group()
+    objects.add(skier)
 
-    ballrect = ballrect.move(move)
-    screen.fill(black)
-    screen.blit(ball, ballrect)
-    pygame.display.flip()
-    clock.tick(40)
+    face_direction = 'right'
+
+    while 1:
+        move = [0, 1]
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+            # !!!!!!!!!!
+        if move[0] > 0 and face_direction != 'right':
+            face_direction = 'right'
+        if move[0] < 0 and face_direction != 'left':
+            face_direction = 'left'
+
+        screen.blit(bg, (0, 0))
+        objects.draw(screen)
+        pygame.display.update()
+        clock.tick(60)
+
+
+if __name__ == '__main__':
+    main()
