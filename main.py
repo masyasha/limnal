@@ -1,13 +1,12 @@
 import sys, pygame
 import player
+from pygame import *
 
 size = width, height = 400, 700
-speed = 10
 color = "#ff7f7f"
 
 
 def main():
-
     pygame.init()
 
     screen = pygame.display.set_mode(size)
@@ -20,15 +19,20 @@ def main():
 
     face_direction = 'right'
 
-    while 1:
-        move = [0, 1]
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit()
-            # !!!!!!!!!!
-        if move[0] > 0 and face_direction != 'right':
-            face_direction = 'right'
-        if move[0] < 0 and face_direction != 'left':
-            face_direction = 'left'
+    down = up = False
+    right = left = False
+
+    hotKeysDown = {274: lambda x: skier.update(x, up, left, right),      # down key
+                   273: lambda x: skier.update(down, x, left, right),        # up key
+                   276: lambda x: skier.update(down, up, x, right),      # left key
+                   275: lambda x: skier.update(down, up, left, x)}     # right key
+
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT: sys.exit()
+            if e.type == KEYDOWN:
+                hotKeysDown[e.key](True)
+#            if e.type == KEYUP:
 
         screen.blit(bg, (0, 0))
         objects.draw(screen)
