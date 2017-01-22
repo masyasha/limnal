@@ -1,8 +1,8 @@
-import sys, pygame
+import pygame
 import player
 from pygame import *
 
-size = width, height = 400, 700
+size = width, height = 900, 650
 color = "#ff7f7f"
 
 
@@ -14,28 +14,26 @@ def main():
     bg.fill(pygame.Color(color))
     clock = pygame.time.Clock()
     skier = player.Player()
-    objects = pygame.sprite.Group()
-    objects.add(skier)
 
     face_direction = 'right'
 
-    down = up = False
-    right = left = False
-
-    hotKeysDown = {274: lambda x: skier.update(x, up, left, right),      # down key
-                   273: lambda x: skier.update(down, x, left, right),        # up key
-                   276: lambda x: skier.update(down, up, x, right),      # left key
-                   275: lambda x: skier.update(down, up, left, x)}     # right key
+    right = left = up = False
 
     while True:
         for e in pygame.event.get():
-            if e.type == pygame.QUIT: sys.exit()
+            if e.type == pygame.QUIT: exit()
             if e.type == KEYDOWN:
-                hotKeysDown[e.key](True)
-#            if e.type == KEYUP:
+                if e.key == K_UP: up = True
+                if e.key == K_RIGHT: right = True
+                if e.key == K_LEFT: left = True
+            if e.type == KEYUP:
+                if e.key == K_UP: up = False
+                if e.key == K_RIGHT: right = False
+                if e.key == K_LEFT: left = False
 
         screen.blit(bg, (0, 0))
-        objects.draw(screen)
+        skier.update(up, right, left)
+        skier.draw(screen)
         pygame.display.update()
         clock.tick(60)
 
